@@ -2,7 +2,6 @@
 
 int main()
 {
-    cadastrarVendas();
-    calcularPrecoTotal();
+    exemplo();
     return 0;
 }

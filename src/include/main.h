@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <locale.h>
-#include "cadastrarVendas.h"
-#include "calcularPrecoTotal.h"
+#include "exemplo.h"
 
 #endif // MAIN_H
