@@ -28,7 +28,7 @@ void adicionarProdutoCatalogo(Produto produtosCatalogo[], int tamanho, int *cont
         printf("\nMarca: ");
         fgets(produtosCatalogo[i].marca, sizeof(produtosCatalogo[i].marca) / sizeof(produtosCatalogo[i].marca[0]), stdin);
 
-        printf("\nPreço: ");
+        printf("\nPreÃ§o: ");
         scanf("%f", &produtosCatalogo[i].preco);
         limparBuffer();
     }

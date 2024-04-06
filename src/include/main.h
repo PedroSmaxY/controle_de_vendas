@@ -25,5 +25,6 @@ typedef struct
 #include "adicionarProdutoCatalogo.h"
 #include "exibirProdutoCatalogo.h"
 #include "registrarCliente.h"
+#include "exibirResumoClientes.h"
 
 #endif
