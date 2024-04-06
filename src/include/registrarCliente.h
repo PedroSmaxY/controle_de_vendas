@@ -17,14 +17,28 @@ void registrarCliente(FILE *arquivoDat, Cliente *cliente, Produto produtosCatalo
 
     for (size_t i = 0; i < sizeof(cliente->produtos) / sizeof(cliente->produtos[0]); i++)
     {
-        printf("\n\nCarrinho: %.2f, Escolha seu item pelo id [-1 -> finalizar, -2 -> mostrar a lista]: ", cliente->gastoTotal);
+        printf("\n\n[Carrinho: %.2f] Escolha seu item pelo id [-1 -> finalizar, -2 -> mostrar a lista]: ", cliente->gastoTotal);
         scanf("%d", &escolha);
         limparBuffer();
         if (escolha > 0)
         {
-            cliente->produtos[i] = produtosCatalogo[escolha - 1];
-            cliente->gastoTotal += produtosCatalogo[escolha - 1].preco;
-            cliente->quantidadeProdutos += 1;
+            int encontrado = 0;
+            for (int j = 0; j < contador; j++)
+            {
+                if (produtosCatalogo[j].codigo == escolha)
+                {
+                    cliente->produtos[i] = produtosCatalogo[j];
+                    cliente->gastoTotal += produtosCatalogo[j].preco;
+                    cliente->quantidadeProdutos += 1;
+                    encontrado = 1;
+                    break;
+                }
+            }
+            if (!encontrado)
+            {
+                printf("\nERRO: ID do produto não encontrado");
+                i--;
+            }
         }
         else if (escolha == -1)
         {

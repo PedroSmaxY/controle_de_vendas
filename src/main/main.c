@@ -5,7 +5,7 @@ int main()
     setlocale(LC_ALL, "Portuguese");
     Produto produtosCatalogo[50];
 
-    // Inicializando as vari�veis do Array
+    // Inicializando as vari�veis do Array
     for (int i = 0; i < 50; i++)
     {
         produtosCatalogo[i].codigo = 0;
@@ -21,7 +21,7 @@ int main()
     FILE *arquivoDat = fopen("loja_roupa.dat", "wb");
     if (arquivoDat == NULL)
     {
-        printf("\nErro: Arquivo loja_roupa.dat n�o foi possivel ser criado!");
+        printf("\nErro: Arquivo loja_roupa.dat n�o foi possivel ser criado!");
         exit(1);
     }
 
@@ -29,10 +29,10 @@ int main()
     {
         limparConsole();
         printf("\n=================================");
-        printf("\nLoja de Roupas");
+        printf("\n-------- Loja de Roupas ---------");
         printf("\n=================================");
-        printf("\n1 - Adicionar Itens ao Cat�logo");
-        printf("\n2 - Exibir Cat�logo");
+        printf("\n1 - Adicionar Itens ao Catálogo");
+        printf("\n2 - Exibir Catálogo");
         printf("\n3 - Registrar Cliente");
         printf("\n4 - Resumo dos Clientes");
         printf("\n5 - Sair");
@@ -47,30 +47,66 @@ int main()
             adicionarProdutoCatalogo(produtosCatalogo, sizeof(produtosCatalogo) / sizeof(produtosCatalogo[0]), &contador);
             break;
         case 2:
+            if (contador == 0)
+            {
+                printf("\nO catálogo está vazio.");
+                printf("\n\nPressione ENTER para continuar. . .");
+                getchar();
+                break;
+            }
             limparConsole();
             exibirProdutoCatalogo(produtosCatalogo, contador);
             printf("\n\nPressione ENTER para continuar. . .");
             getchar();
             break;
         case 3:
+            if (contador == 0)
+            {
+                printf("\nErro: Não há produtos no catálogo. Adicione um produto antes de registrar um cliente.");
+                printf("\n\nPressione ENTER para continuar. . .");
+                getchar();
+                break;
+            }
+            if (arquivoDat != NULL)
+            {
+                fclose(arquivoDat);
+            }
+            arquivoDat = fopen("loja_roupa.dat", "ab");
+            if (arquivoDat == NULL)
+            {
+                printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
+                exit(1);
+            }
             limparConsole();
             registrarCliente(arquivoDat, &cliente, produtosCatalogo, contador);
             break;
         case 4:
-            limparConsole();
             fclose(arquivoDat);
             arquivoDat = fopen("loja_roupa.dat", "rb");
             if (arquivoDat == NULL)
             {
-                printf("\nErro: Arquivo loja_roupa.dat n�o foi possivel ser criado!");
+                printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
             }
 
+            fseek(arquivoDat, 0, SEEK_END);
+            long tamanhoArquivo = ftell(arquivoDat);
+            rewind(arquivoDat);
+
+            if (tamanhoArquivo == 0)
+            {
+                printf("\nErro: Não há clientes cadastrados.");
+                printf("\n\nPressione ENTER para continuar. . .");
+                getchar();
+                break;
+            }
+
+            limparConsole();
             exibirResumoClientes(arquivoDat);
             break;
         default:
             if (escolhaMenu != 5)
             {
-                printf("\nDigite uma op��o correta!");
+                printf("\nDigite uma opção correta!");
                 printf("\n\nPressione ENTER para continuar. . .");
                 getchar();
             }
@@ -78,7 +114,10 @@ int main()
         }
 
         if (escolhaMenu == 5)
+        {
+            fclose(arquivoDat);
             break;
+        }
     }
 
     return 0;
