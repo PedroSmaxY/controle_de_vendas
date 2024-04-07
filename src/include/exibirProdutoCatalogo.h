@@ -10,7 +10,8 @@ void exibirProdutoCatalogo(Produto produtosCatalogo[], int tamanho)
         printf("\n\nCódigo: %d", produtosCatalogo[i].codigo);
         printf("\nNome: %s", produtosCatalogo[i].nome);
         printf("Marca: %s", produtosCatalogo[i].marca);
-        printf("Preço: %.2f", produtosCatalogo[i].preco);
+        printf("Preço: R$%.2f", produtosCatalogo[i].preco);
+        printf("\nQuantidade: %d", produtosCatalogo[i].quantidade);
     }
 }
 

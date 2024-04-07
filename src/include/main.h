@@ -6,6 +6,8 @@ typedef struct
     int codigo;
     char nome[50];
     char marca[50];
+    int quantidade;
+    int quantidadeVendida;
     float preco;
 } Produto;
 
@@ -26,5 +28,6 @@ typedef struct
 #include "exibirProdutoCatalogo.h"
 #include "registrarCliente.h"
 #include "exibirResumoClientes.h"
+#include "exibirResumoVendas.h"
 
 #endif

@@ -1,11 +1,13 @@
 #ifndef EXIBIRRESUMOCLIENTES_H
 #define EXIBIRRESUMOCLIENTES_H
+#include "calcularDesconto.h"
 #include "main.h"
 
-void exibirResumoClientes(FILE *arquivoDat)
+void exibirResumoClientes(FILE *arquivoDat, int quantidadeClientes)
 {
     Cliente clientes[100];
     int i = 0;
+    float faturamentoBruto = 0;
 
     rewind(arquivoDat);
 
@@ -28,16 +30,28 @@ void exibirResumoClientes(FILE *arquivoDat)
     }
 
     printf("\n-------------- CLIENTES --------------");
+    printf("\nClientes Cadastrados: %d", quantidadeClientes);
+    printf("\n--------------------------------------");
 
     for (int j = 0; j < i; j++)
     {
-        printf("\n\nNome do cliente: %s", clientes[j].nome);
-        printf("Gasto total: %.2f", clientes[j].gastoTotal);
+        printf("\nNome do cliente: %s", clientes[j].nome);
+        printf("\nGasto total: R$%.2f", clientes[j].gastoTotal);
         printf("\nQuantidade de produtos comprados: %d", clientes[j].quantidadeProdutos);
-    }
+        float precoComDesconto = calcularDesconto(clientes[j]);
+        if (precoComDesconto > 0)
+        {
+            printf("\n10%% de desconto aplicado a cada produto: R$%.2f", precoComDesconto);
+            faturamentoBruto += precoComDesconto;
+        }
+        else
+        {
+            faturamentoBruto += clientes[j].gastoTotal;
+        }
 
-    printf("\n\nPressione ENTER para continuar. . .");
-    getchar();
+        printf("\n--------------------------------------");
+    }
+    printf("\nFaturamento Bruto da Loja: R$%.2f", faturamentoBruto);
 }
 
 #endif

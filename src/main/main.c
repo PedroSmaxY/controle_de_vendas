@@ -5,7 +5,7 @@ int main()
     setlocale(LC_ALL, "Portuguese");
     Produto produtosCatalogo[50];
 
-    // Inicializando as vari�veis do Array
+    // Inicializando as variáveis do Array
     for (int i = 0; i < 50; i++)
     {
         produtosCatalogo[i].codigo = 0;
@@ -16,12 +16,13 @@ int main()
 
     Cliente cliente;
     int escolhaMenu;
+    int quantidadeClientes = 0;
     int contador = 0;
 
     FILE *arquivoDat = fopen("loja_roupa.dat", "wb");
     if (arquivoDat == NULL)
     {
-        printf("\nErro: Arquivo loja_roupa.dat n�o foi possivel ser criado!");
+        printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
         exit(1);
     }
 
@@ -34,7 +35,7 @@ int main()
         printf("\n1 - Adicionar Itens ao Catálogo");
         printf("\n2 - Exibir Catálogo");
         printf("\n3 - Registrar Cliente");
-        printf("\n4 - Resumo dos Clientes");
+        printf("\n4 - Resumo Geral");
         printf("\n5 - Sair");
         printf("\n=================================");
         printf("\nDigite: ");
@@ -78,7 +79,7 @@ int main()
                 exit(1);
             }
             limparConsole();
-            registrarCliente(arquivoDat, &cliente, produtosCatalogo, contador);
+            registrarCliente(arquivoDat, &cliente, produtosCatalogo, contador, &quantidadeClientes);
             break;
         case 4:
             fclose(arquivoDat);
@@ -101,7 +102,12 @@ int main()
             }
 
             limparConsole();
-            exibirResumoClientes(arquivoDat);
+
+            exibirResumoClientes(arquivoDat, quantidadeClientes);
+            exibirResumoVendas(produtosCatalogo, contador);
+
+            printf("\n\nPressione ENTER para continuar. . .");
+            getchar();
             break;
         default:
             if (escolhaMenu != 5)
