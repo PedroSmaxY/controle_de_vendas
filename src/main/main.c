@@ -35,7 +35,7 @@ int main()
         printf("\n1 - Adicionar Itens ao Catálogo");
         printf("\n2 - Exibir Catálogo");
         printf("\n3 - Registrar Cliente");
-        printf("\n4 - Resumo Geral");
+        printf("\n4 - Resumo Geral do Dia");
         printf("\n5 - Sair");
         printf("\n=================================");
         printf("\nDigite: ");
