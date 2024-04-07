@@ -8,18 +8,11 @@ void adicionarProdutoCatalogo(Produto produtosCatalogo[], int tamanho, int *cont
 
     limparConsole();
 
-    for (int i = 0; i < tamanho; i++)
+    for (int i = *contador; i < tamanho; i++)
     {
-        if (i > 0)
-        {
-            printf("Deseja continuar? [S/N]: ");
-            scanf(" %c", &continuar);
-            limparBuffer();
-            if (continuar == 'N' || continuar == 'n')
-                break;
-        }
-        produtosCatalogo[i].codigo = i + 1;
-        *contador = i + 1;
+
+        produtosCatalogo[i].quantidadeVendida = 0;
+        (*contador)++;
 
         printf("\nProduto %d\n", i + 1);
         printf("\nNome: ");
@@ -28,9 +21,42 @@ void adicionarProdutoCatalogo(Produto produtosCatalogo[], int tamanho, int *cont
         printf("\nMarca: ");
         fgets(produtosCatalogo[i].marca, sizeof(produtosCatalogo[i].marca) / sizeof(produtosCatalogo[i].marca[0]), stdin);
 
-        printf("\nPreço: ");
+        int codigoExistente;
+        do
+        {
+            codigoExistente = 0;
+            printf("\nCódigo: ");
+            scanf("%d", &produtosCatalogo[i].codigo);
+            limparBuffer();
+
+            for (int j = 0; j < i; j++)
+            {
+                if (produtosCatalogo[j].codigo == produtosCatalogo[i].codigo)
+                {
+                    printf("Este código já existe. Por favor, insira um novo código.\n");
+                    codigoExistente = 1;
+                    break;
+                }
+            }
+
+        } while (codigoExistente);
+
+        printf("\nPreço: R$");
         scanf("%f", &produtosCatalogo[i].preco);
         limparBuffer();
+
+        printf("\nQuantidade: ");
+        scanf("%d", &produtosCatalogo[i].quantidade);
+        limparBuffer();
+
+        if (i < tamanho - 1)
+        {
+            printf("Deseja continuar? [S/N]: ");
+            scanf(" %c", &continuar);
+            limparBuffer();
+            if (continuar == 'N' || continuar == 'n')
+                break;
+        }
     }
 
     for (int i = 0; i < tamanho; i++)
