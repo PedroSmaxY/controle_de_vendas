@@ -3,27 +3,27 @@
 int main()
 {
     setlocale(LC_ALL, "Portuguese");
-    Produto produtosCatalogo[50];
-
-    // Inicializando as variáveis do Array
-    for (int i = 0; i < 50; i++)
-    {
-        produtosCatalogo[i].codigo = 0;
-        produtosCatalogo[i].preco = 0.0;
-        produtosCatalogo[i].nome[0] = '\0';
-        produtosCatalogo[i].marca[0] = '\0';
-    }
-
-    Cliente cliente;
-    int escolhaMenu;
-    int quantidadeClientes = 0;
     int contador = 0;
+    int contagemVendas = 0;
+    int escolha;
+    size_t i, j;
+    float faturamentoBruto = 0;
+    Cliente clientes[100];
 
-    FILE *arquivoDat = fopen("loja_roupa.dat", "wb");
-    if (arquivoDat == NULL)
+    for (i = 0; i < sizeof(clientes) / sizeof(clientes[0]); i++)
     {
-        printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
-        exit(1);
+        clientes[i].codigo = 0;
+        clientes[i].nome[0] = '\0';
+        clientes[i].quantidadeTotal = 0;
+        clientes[i].valorTotal = 0;
+        for (j = 0; j < sizeof(clientes[0].produtos) / sizeof(clientes[0].produtos[0]); j++)
+        {
+            clientes[i].produtos[j].codigo = 0;
+            clientes[i].produtos[j].marca[0] = '\0';
+            clientes[i].produtos[j].nome[0] = '\0';
+            clientes[i].produtos[j].quantidade = 0;
+            clientes[i].produtos[j].valorUnitario = 0;
+        }
     }
 
     while (1)
@@ -32,96 +32,77 @@ int main()
         printf("\n=================================");
         printf("\n-------- Loja de Roupas ---------");
         printf("\n=================================");
-        printf("\n1 - Adicionar Itens ao Catálogo");
-        printf("\n2 - Exibir Catálogo");
-        printf("\n3 - Registrar Cliente");
-        printf("\n4 - Resumo Geral do Dia");
-        printf("\n5 - Sair");
+        printf("\n1 - Cadastrar Venda");
+        printf("\n2 - Relatório de Vendas");
+        printf("\n3 - Procurar cliente por data");
+        printf("\n4 - Remover cliente por código");
+        printf("\n5 - Limpar arquivos");
+        printf("\n0 - Sair");
         printf("\n=================================");
         printf("\nDigite: ");
-        scanf("%d", &escolhaMenu);
+        scanf("%d", &escolha);
         limparBuffer();
 
-        switch (escolhaMenu)
+        FILE *arquivoDat;
+
+        if (escolha != 0)
         {
-        case 1:
-            adicionarProdutoCatalogo(produtosCatalogo, sizeof(produtosCatalogo) / sizeof(produtosCatalogo[0]), &contador);
-            break;
-        case 2:
-            if (contador == 0)
+            switch (escolha)
             {
-                printf("\nO catálogo está vazio.");
-                printf("\n\nPressione ENTER para continuar. . .");
-                getchar();
+            case 1:
+                limparConsole();
+                cadastrarVendas(clientes, &contador, sizeof(clientes) / sizeof(clientes[0]), &faturamentoBruto, &contagemVendas);
                 break;
-            }
-            limparConsole();
-            exibirProdutoCatalogo(produtosCatalogo, contador);
-            printf("\n\nPressione ENTER para continuar. . .");
-            getchar();
-            break;
-        case 3:
-            if (contador == 0)
-            {
-                printf("\nErro: Não há produtos no catálogo. Adicione um produto antes de registrar um cliente.");
-                printf("\n\nPressione ENTER para continuar. . .");
-                getchar();
+            case 2:
+                limparConsole();
+                arquivoDat = fopen("loja_roupa.dat", "rb");
+                if (arquivoDat != NULL)
+                {
+                    fclose(arquivoDat);
+                    relatorioVendas(&contador, faturamentoBruto);
+                }
+                else
+                {
+                    printf("\nO arquivo loja_roupa.dat ainda não foi criado. Por favor, realize uma venda primeiro.\n");
+                    printf("\nPressione ENTER para continuar. . .\n");
+                    getchar();
+                }
                 break;
-            }
-            if (arquivoDat != NULL)
-            {
-                fclose(arquivoDat);
-            }
-            arquivoDat = fopen("loja_roupa.dat", "ab");
-            if (arquivoDat == NULL)
-            {
-                printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
-                exit(1);
-            }
-            limparConsole();
-            registrarCliente(arquivoDat, &cliente, produtosCatalogo, contador, &quantidadeClientes);
-            break;
-        case 4:
-            fclose(arquivoDat);
-            arquivoDat = fopen("loja_roupa.dat", "rb");
-            if (arquivoDat == NULL)
-            {
-                printf("\nErro: Arquivo loja_roupa.dat não foi possivel ser criado!");
-            }
-
-            fseek(arquivoDat, 0, SEEK_END);
-            long tamanhoArquivo = ftell(arquivoDat);
-            rewind(arquivoDat);
-
-            if (tamanhoArquivo == 0)
-            {
-                printf("\nErro: Não há clientes cadastrados.");
-                printf("\n\nPressione ENTER para continuar. . .");
-                getchar();
+            case 3:
+                limparConsole();
+                arquivoDat = fopen("loja_roupa.dat", "rb");
+                if (arquivoDat != NULL)
+                {
+                    fclose(arquivoDat);
+                    procurarClientePorData();
+                }
+                else
+                {
+                    printf("\nO arquivo loja_roupa.dat ainda não foi criado. Por favor, realize uma venda primeiro.\n");
+                    printf("\nPressione ENTER para continuar. . .\n");
+                    getchar();
+                }
+                limparConsole();
                 break;
+            case 4:
+                limparConsole();
+                int codigoCliente;
+                printf("\nDigite o código do cliente que deseja remover: ");
+                scanf("%d", &codigoCliente);
+                limparBuffer();
+                removerClientePorCodigo(codigoCliente);
+                break;
+            case 5:
+                limparConsole();
+                resetarArquivos();
+                break;
+            default:
+                printf("\nDigite um valor válido!!!");
+                continue;
             }
-
-            limparConsole();
-
-            exibirResumoClientes(arquivoDat, quantidadeClientes);
-            exibirResumoVendas(produtosCatalogo, contador);
-
-            printf("\n\nPressione ENTER para continuar. . .");
-            getchar();
-            break;
-        default:
-            if (escolhaMenu != 5)
-            {
-                printf("\nDigite uma opção correta!");
-                printf("\n\nPressione ENTER para continuar. . .");
-                getchar();
-            }
-            break;
         }
-
-        if (escolhaMenu == 5)
+        else
         {
-            fclose(arquivoDat);
             break;
         }
     }
